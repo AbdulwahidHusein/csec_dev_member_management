@@ -22,8 +22,6 @@ class CustomUserManager(BaseUserManager):
 class Member(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
-    first_name = models.CharField(max_length=20, null=True, blank=True)
-    last_name = models.CharField(max_length=20, null=True, blank=True)
     email = models.EmailField(unique=True)
     full_name = models.CharField(max_length=100)
     phone_number = models.CharField(max_length=25)
@@ -43,6 +41,12 @@ class Member(AbstractBaseUser, PermissionsMixin):
         return self.email
 
 class Team(models.Model):
+    """
+    usage:
+    team = Team.objects.get(id=1)  
+    memberships = team.membership_set.all()
+    memberships is iterable
+    """
     name = models.CharField(max_length=100)
     members = models.ManyToManyField('Member', through='Membership')
     def __str__(self):
@@ -54,4 +58,4 @@ class Membership(models.Model):
     joined_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f'{self.user.name} - {self.team.name}'
+        return f'{self.user.email} - {self.team.name}'
