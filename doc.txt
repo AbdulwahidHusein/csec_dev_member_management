@@ -1,0 +1,6 @@
+
+backend 
+    accounts - account related stuff: auth, member management, member types, profile CRUD and so on
+    events - event related stuff, like event CRUD, notifing event
+    teams - team related stuffs like team CRUD
+    
