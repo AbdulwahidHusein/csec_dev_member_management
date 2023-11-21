@@ -7,7 +7,8 @@ import Community from './pages/community/Community';
 import Nopage from './pages/Nopage';
 import { AppBar, Toolbar, Typography, Button, IconButton, Menu, MenuItem, useMediaQuery } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
-
+import SignIn from './pages/auth/login';
+import SignUp from './pages/auth/registration';
 function App() {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const isMenuOpen = Boolean(anchorEl);
@@ -41,6 +42,12 @@ function App() {
               </Button>
               <Button color="inherit" component={Link} to="/community">
                 Community
+              </Button>
+              <Button color="inherit" component={Link} to="/login">
+                login
+              </Button>
+              <Button color="inherit" component={Link} to="/register">
+                SignUp
               </Button>
             </>
           ) : (
@@ -85,6 +92,8 @@ function App() {
         <Route path="/my-team" element={<Team />} />
         <Route path="/my-profile" element={<Profile />} />
         <Route path="/community" element={<Community />} />
+        <Route path="/login" element={<SignIn />} />
+        <Route path="/register" element={<SignUp />} />
         <Route path="*" element={<Nopage />} />
       </Routes>
     </Router>
