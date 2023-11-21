@@ -47,8 +47,12 @@ class Team(models.Model):
     memberships = team.membership_set.all()
     memberships is iterable
     """
-    name = models.CharField(max_length=100)
+    name = models.CharField(unique=True, max_length=100)
     members = models.ManyToManyField('Member', through='Membership')
+    team_lead = models.ForeignKey('Member', on_delete=models.SET_NULL, \
+        null=True, blank=True, related_name='lead_teams')
+    bio = models.CharField(max_length=200, null=True, blank=True)
+    joined_at = models.DateField(auto_now_add=True, null=True, blank=True)
     def __str__(self):
         return self.name
 

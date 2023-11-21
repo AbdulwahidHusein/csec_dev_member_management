@@ -5,7 +5,7 @@ from rest_framework import serializers
 class MemberSerializer(serializers.ModelSerializer):
     class Meta:
         model = Member
-        fileds = "__all__"
+        fields = "__all__"
 
 class MemberRegistrationSerializer(serializers.ModelSerializer):
     class Meta:
