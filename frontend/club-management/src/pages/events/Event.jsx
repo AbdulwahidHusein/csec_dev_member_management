@@ -1,7 +1,8 @@
 function Event(){
     return (
         <>
-        Events page
+        <div style={{"color":"red"}}>events
+            </div>Events page
         </>
     )
 }
