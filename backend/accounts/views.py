@@ -51,13 +51,20 @@ class MemberViewSet(viewsets.ModelViewSet):
     #queryset = Member.objects.all()
     #permission_classes = [permissions.IsAdminUser]
     authentication_classes = [JWTAuthentication]
-    def get_queryset(self):
-        if self.request.method in ['PUT', 'PATCH']:
-            user = self.request.user
-            return user.member
-    def get_serializer_class(self):
-        if self.request.method in ['PUT', 'PATCH']:
-            return MemberSerializer
+    queryset = Member.objects.all()
+    serializer_class = MemberSerializer
+
+    def partial_update(self, request, pk=None):
+        member = self.get_object()
+        serializer = MemberSerializer(instance=member, data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        
+        return Response(serializer.data)
+
+    def get_object(self):
+        return Member.objects.get(user=self.request.user)
+        #return self.request.user.member
     
     def get_permissions(self):
         if self.action == 'login' or self.action == 'register':
@@ -67,11 +74,6 @@ class MemberViewSet(viewsets.ModelViewSet):
         if self.request.method in ['PUT', 'PATCH']:
             return [permissions.IsAuthenticated()]
         return [permissions.IsAdminUser()]
-    
-    def get_queryset(self):
-        if self.action == "login":
-            return CustomUser.objects.all()
-        return Member.objects.all()
     
     @transaction.atomic
     @action(detail=False, methods=['post'])
@@ -101,6 +103,7 @@ class MemberViewSet(viewsets.ModelViewSet):
             member = Member.objects.get(user=user)
             serializer = MemberSerializer(instance=member)
             member_data = serializer.data
+            member_data["email"] = user.email
         except:
             pass
         
@@ -114,7 +117,9 @@ class TeamViewSet(viewsets.ModelViewSet):
     def get_permissions(self):
         if self.action == "approve_team":
             return [permissions.IsAdminUser()]
-        return [permissions.IsAuthenticated()]
+        if self.request.method == "post":
+            return [permissions.IsAuthenticated()]
+        return [permissions.IsAuthenticated(), IsUSerTeamMember()]
     @action(detail=False, methods=["post"])
     def approve_team(self, request):
         serializer = TeamApproveSerializer(data=request.data)
