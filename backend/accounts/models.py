@@ -17,12 +17,16 @@ class CustomUserManager(BaseUserManager):
         extra_fields.setdefault('is_superuser', True)
         self.model.REQUIRED_FIELDS = []
         return self.create_user(email, password, **extra_fields)
-
-
-class Member(AbstractBaseUser, PermissionsMixin):
+class CustomUser(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     email = models.EmailField(unique=True)
+    objects = CustomUserManager()
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = []
+    
+class Member(models.Model):
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='member')
     full_name = models.CharField(max_length=100)
     phone_number = models.CharField(max_length=25)
     profile_picture = models.ImageField(upload_to="profiles", null=True, blank=True)
@@ -32,13 +36,9 @@ class Member(AbstractBaseUser, PermissionsMixin):
     portfolio_link = models.CharField(max_length=100, null=True, blank=True)
     linkedin_link = models.CharField(max_length=100, null=True, blank=True)
     bio = models.TextField(max_length=1000, null=True, blank=True)
-    objects = CustomUserManager()
-
-    USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = []
-
+    approved = models.BooleanField(default=False)
     def __str__(self):
-        return self.email
+        return self.user.email
 
 class Team(models.Model):
     """
@@ -53,6 +53,7 @@ class Team(models.Model):
         null=True, blank=True, related_name='lead_teams')
     bio = models.CharField(max_length=200, null=True, blank=True)
     joined_at = models.DateField(auto_now_add=True, null=True, blank=True)
+    approved=  models.BooleanField(default=False)
     def __str__(self):
         return self.name
 

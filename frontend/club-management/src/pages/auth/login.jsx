@@ -12,19 +12,39 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import axios from "axios";
+import { useState } from 'react';
+import { useContext } from 'react';
+import { UserContext } from '../../UserContext';
 
 const theme = createTheme();
 
 export default function SignIn() {
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    // eslint-disable-next-line no-console
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
-  };
+    const [error, setError] = useState("");
+    const { setUserData } = useContext(UserContext);
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+        const data = new FormData(event.currentTarget);
+        const formData = Object.fromEntries(data.entries());
+        console.log(formData);
+    
+        try {
+          const response = await axios.post('http://127.0.0.1:8000/members/login/', formData);
+    
+          // Handle the response data
+          console.log('Login successful');
+          setUserData(response.data);
+          console.log(response.data);
+          const { access } = response.data;
+          const { refresh } = response.data;
+        localStorage.setItem('accessToken', access);
+        localStorage.setItem('refreshToken', refresh);
+        } catch (error) {
+          // Handle the error
+          setError("invalid credentials")
+          console.error('Registration failed:', error);
+        }
+      };
 
   return (
     <ThemeProvider theme={theme}>
@@ -44,6 +64,9 @@ export default function SignIn() {
           <Typography component="h1" variant="h5">
             Sign in
           </Typography>
+          {error && <Typography color={"red"} component="h1" variant="h5">
+            {error}
+          </Typography>}
           <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
             <TextField
               margin="normal"

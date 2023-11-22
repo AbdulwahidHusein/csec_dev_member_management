@@ -41,9 +41,13 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'drf_yasg',
     'accounts',
+    'corsheaders',
+    "events",
+    "community",
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -109,7 +113,7 @@ REST_FRAMEWORK = {
 }
 SIMPLE_JWT = {
     'AUTH_HEADER_TYPES': ('Bearer',),
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),  # Increase access token lifespan to 30 minutes
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=300),  # Increase access token lifespan to 30 minutes
     'REFRESH_TOKEN_LIFETIME': timedelta(days=7),     # Increase refresh token lifespan to 7 days
 }
 
@@ -129,8 +133,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = 'static/'
-AUTH_USER_MODEL = "accounts.Member"
+AUTH_USER_MODEL = "accounts.CustomUser"
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+CORS_ORIGIN_ALLOW_ALL = True

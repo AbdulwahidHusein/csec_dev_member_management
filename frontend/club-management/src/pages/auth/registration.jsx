@@ -12,20 +12,37 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-
+import { Select, MenuItem } from '@mui/material';
+import axios from 'axios';
 const theme = createTheme();
 
 export default function SignUp() {
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    // eslint-disable-next-line no-console
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
-  };
-
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+        const data = new FormData(event.currentTarget);
+        const formData = Object.fromEntries(data.entries());
+        const email = formData["email"];
+        const password = formData["password"];
+        formData.user = {
+            "email":email,"password":password
+        }
+        console.log(formData);
+    
+        try {
+          const response = await axios.post('http://127.0.0.1:8000/members/register/', formData);
+    
+          // Handle the response data
+          console.log('Registration successful');
+          console.log(response.data);
+          const { access } = response.data;
+          const { refresh } = response.data;
+        localStorage.setItem('accessToken', access);
+        localStorage.setItem('refreshToken', refresh);
+        } catch (error) {
+          // Handle the error
+          console.error('Registration failed:', error);
+        }
+      };
   return (
     <ThemeProvider theme={theme}>
       <Container component="main" maxWidth="xs">
@@ -51,10 +68,25 @@ export default function SignUp() {
               fullWidth
               id="fullName"
               label="Full Name"
-              name="fullName"
+              name="full_name"
               autoComplete="fullName"
               autoFocus
             />
+            
+            <Select
+              margin="normal"
+              required
+              fullWidth
+              id="gender"
+              label="Gender"
+              name="gender"
+              autoComplete="gender"
+              autoFocus
+            >
+              <MenuItem value="male">Male</MenuItem>
+              <MenuItem value="female">Female</MenuItem>
+            </Select>
+            
             <TextField
               margin="normal"
               required
@@ -71,7 +103,7 @@ export default function SignUp() {
               fullWidth
               id="phoneNumber"
               label="Phone Number"
-              name="phoneNumber"
+              name="phone_number"
               autoComplete="phoneNumber"
               autoFocus
             />
@@ -81,7 +113,7 @@ export default function SignUp() {
               fullWidth
               id="department"
               label="Department"
-              name="department"
+              name="departement"
               autoComplete="department"
               autoFocus
             />
@@ -126,12 +158,12 @@ export default function SignUp() {
               id="password"
               autoComplete="current-password"
             />
-              <TextField
+            <TextField
               margin="normal"
               required
               fullWidth
               name="password2"
-              label=" re type password Password"
+              label="Re-type Password"
               type="password"
               id="password2"
               autoComplete="current-password"

@@ -1,0 +1,52 @@
+.profile-card {
+    width: 400px;
+    margin: 0 auto;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .profile-picture {
+    position: relative;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .picture {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+  
+  .upload-icon {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    transform: translate(50%, 50%);
+    background-color: #fff;
+    border-radius: 50%;
+    padding: 8px;
+    cursor: pointer;
+    box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
+  }
+  
+  .upload-icon svg {
+    width: 20px;
+    height: 20px;
+    color: #555;
+  }
+  
+  .profile-form .mb-3 {
+    position: relative;
+  }
+  
+  .label-icon {
+    position: absolute;
+    top: 50%;
+    left: 12px;
+    transform: translateY(-50%);
+    font-size: 18px;
+    color: #555;
+  }
