@@ -5,7 +5,7 @@ function Team(){
     const { userData } = useContext(UserContext);
     return (
         <>
-        Team page {userData}
+        Team page
         </>
     )
 }

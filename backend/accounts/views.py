@@ -92,7 +92,7 @@ class MemberViewSet(viewsets.ModelViewSet):
         return Response({
             'refresh': str(refresh),
             'access': str(refresh.access_token),
-            "data":request.data,
+            "member_data":serializer.data,
         })
     @transaction.atomic
     @action(detail=False, methods=['get'])

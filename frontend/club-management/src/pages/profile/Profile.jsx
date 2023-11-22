@@ -124,7 +124,44 @@ function Profile() {
           variant="outlined"
         />
 
-        {/* ... (Repeat the pattern for other fields) ... */}
+      <div className={classes.labelIcon}>
+          <MdPerson />
+          <Typography variant="subtitle1">Phone Number</Typography>
+        </div>
+        <TextField
+          type="text"
+          name="phone_number"
+          placeholder="Enter Phone Number"
+          value={profileData.phone_number}
+          onChange={handleInputChange}
+          variant="outlined"
+        />
+
+        <div className={classes.labelIcon}>
+          <MdPerson />
+          <Typography variant="subtitle1">Github Link</Typography>
+        </div>
+        <TextField
+          type="text"
+          name="github_link"
+          placeholder="Enter github Link"
+          value={profileData.github_link}
+          onChange={handleInputChange}
+          variant="outlined"
+        />
+
+      <div className={classes.labelIcon}>
+          <MdPerson />
+          <Typography variant="subtitle1">Portfolio Link</Typography>
+        </div>
+        <TextField
+          type="text"
+          name="portfolio_link"
+          placeholder="Enter portfolio Link"
+          value={profileData.portfolio_link}
+          onChange={handleInputChange}
+          variant="outlined"
+        />
 
         <Button
           variant="contained"

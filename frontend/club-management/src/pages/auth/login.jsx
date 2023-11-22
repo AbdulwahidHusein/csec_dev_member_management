@@ -29,7 +29,7 @@ export default function SignIn() {
         console.log(formData);
     
         try {
-          const response = await axios.post('http://127.0.0.1:8000/members/login/', formData);
+          const response = await axios.post('http://127.0.0.1:8000/members/auth/login/', formData);
     
           // Handle the response data
           console.log('Login successful');
