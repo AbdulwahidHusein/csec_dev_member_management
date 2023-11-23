@@ -13,9 +13,11 @@ import { useContext } from 'react';
 import { UserContext } from './UserContext';
 import "./App.css";
 import Header from './components/Header';
+import { CircularProgress } from '@material-ui/core';
+
 
 function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(true);
   const [loading, setLoading] = useState(true);
   const {setUserData} = useContext(UserContext);
 
@@ -34,11 +36,11 @@ function App() {
           setIsAuthenticated(true);
         } else {
           // If there is no access token, redirect to the login page
-          setIsAuthenticated(false);
+          setIsAuthenticated(true);
         }
       } catch (error) {
         console.log(error)
-        setIsAuthenticated(false);
+        setIsAuthenticated(true);
       } finally {
         setLoading(false);
       }
@@ -48,12 +50,15 @@ function App() {
   }, []);
 
   if (loading) {
-    return <div>Loading...</div>;
+    <div className="centered-container">
+    <CircularProgress disableShrink />
+  </div>
   }
 
   return (
     <Router>
       <div style={{ paddingTop: '64px' }}>
+        <Sidebar />
         <Header isAuthenticated={isAuthenticated} />
         <Routes>
           <Route path="/" element={isAuthenticated ? <Event /> : <Navigate to="/login" />} />
@@ -64,7 +69,7 @@ function App() {
           <Route path="/register" element={!isAuthenticated ? <SignUp /> : <Navigate to="/" />} />
           <Route path="*" element={<Nopage />} />
         </Routes>
-        </div>
+      </div>
     </Router>
   );
 }

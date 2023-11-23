@@ -2,4 +2,9 @@
 .app-toolbar {
     justify-content: space-between;
   }
-  
+  .centered-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }

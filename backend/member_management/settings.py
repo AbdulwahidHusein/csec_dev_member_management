@@ -116,7 +116,13 @@ SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=300),  # Increase access token lifespan to 30 minutes
     'REFRESH_TOKEN_LIFETIME': timedelta(days=7),     # Increase refresh token lifespan to 7 days
 }
-
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'your-smtp-server.com'
+EMAIL_PORT = 587  # Port number for SMTP
+EMAIL_HOST_USER = 'your-email@example.com'
+EMAIL_HOST_PASSWORD = 'your-email-password'
+EMAIL_USE_TLS = True  # Use TLS encryption
+DEFAULT_FROM_EMAIL = 'your-email@example.com'  # Default sender email address
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 

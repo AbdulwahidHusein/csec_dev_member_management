@@ -71,6 +71,8 @@ class MemberViewSet(viewsets.ModelViewSet):
             return []
         if self.action == "get_details":
             return [permissions.IsAuthenticated()]
+        if self.action == "aprrove_member":
+            return [permissions.IsAdminUser()]
         if self.request.method in ['PUT', 'PATCH']:
             return [permissions.IsAuthenticated()]
         return [permissions.IsAdminUser()]
@@ -110,7 +112,12 @@ class MemberViewSet(viewsets.ModelViewSet):
         return Response(
             {"member_data" : member_data}
         )
-
+    @transaction.atomic
+    @action(detail=False, methods=['post', "put", "patch"])
+    def aprrove_member(self, request):
+        serializer = MemberSerializer()
+        pass
+    
 class TeamViewSet(viewsets.ModelViewSet):
     authentication_classes = [JWTAuthentication]
     queryset = Team.objects.all()

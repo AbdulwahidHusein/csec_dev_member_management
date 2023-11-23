@@ -2,6 +2,7 @@ import { useContext } from 'react';
 import { UserContext } from '../../UserContext';
 import "react-bootstrap"
 
+
 const tepmEvents = [
     {
         "title" :"metting",
@@ -44,10 +45,11 @@ function Event(){
       {  tepmEvents.map(
             (evt) => {
                 return (
-                    <div className="btn btn-primary">{evt.title}</div>
+                    <div id={evt.id} className="btn btn-primary">{evt.title}</div>
                 )
             }
         )}
+        
         </>
     )
 }
