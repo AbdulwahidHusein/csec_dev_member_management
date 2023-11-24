@@ -7,14 +7,15 @@ from .models import (
     Event, Anouncement
 )
 class EventViewset(viewsets.ModelViewSet):
-    serializer_class = EventSerializer
     queryset = Event.objects.all()
     authentication_classes = [JWTAuthentication]
+    serializer_class = EventSerializer
+    
     def get_permissions(self):
-        if self.request.method == "GET":
-            return []
-        return [permissions.IsAdminUser()]
-
+        if self.request.method == "POST":
+            return [permissions.AllowAny()]
+        return [permissions.AllowAny()]
+    
 class AnouncementViewset(viewsets.ModelViewSet):
     queryset = Anouncement.objects.all()
     serializer_class = []
@@ -22,4 +23,4 @@ class AnouncementViewset(viewsets.ModelViewSet):
     def get_permissions(self):
         if self.request.method == "GET":
             return []
-        return [permissions.IsAdminUser()]
+        return [permissions.AllowAny()]
