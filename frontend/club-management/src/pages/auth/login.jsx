@@ -1,120 +1,97 @@
-import * as React from 'react';
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
-import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import Link from '@mui/material/Link';
-import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import axios from "axios";
-import { useState } from 'react';
-import { useContext } from 'react';
+import React, { useState, useContext } from 'react';
+import {
+  Button,
+  Checkbox,
+  Flex,
+  Text,
+  FormControl,
+  FormLabel,
+  Heading,
+  Input,
+  Stack,
+  Image,
+} from '@chakra-ui/react';
+import { Link } from 'react-router-dom';
+
+import axios from 'axios';
 import { UserContext } from '../../UserContext';
 
-const theme = createTheme();
+export default function LoginPage() {
+  const [error, setError] = useState('');
+  const { setUserData } = useContext(UserContext);
 
-export default function SignIn() {
-    const [error, setError] = useState("");
-    const { setUserData } = useContext(UserContext);
-    const handleSubmit = async (event) => {
-        event.preventDefault();
-        const data = new FormData(event.currentTarget);
-        const formData = Object.fromEntries(data.entries());
-        console.log(formData);
-    
-        try {
-          const response = await axios.post('http://127.0.0.1:8000/members/auth/login/', formData);
-    
-          // Handle the response data
-          console.log('Login successful');
-          setUserData(response.data);
-          console.log(response.data);
-          const { access } = response.data;
-          const { refresh } = response.data;
-        localStorage.setItem('accessToken', access);
-        localStorage.setItem('refreshToken', refresh);
-        } catch (error) {
-          // Handle the error
-          setError("invalid credentials")
-          console.error('Registration failed:', error);
-        }
-      };
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
+    const formData = Object.fromEntries(data.entries());
+
+    try {
+      const response = await axios.post(
+        'http://127.0.0.1:8000/members/auth/login/',
+        formData
+      );
+
+      console.log('Login successful');
+      setUserData(response.data);
+      console.log(response.data);
+
+      const { access } = response.data.access;
+      const { refresh } = response.data.refresh;
+      localStorage.setItem('accessToken', access);
+      localStorage.setItem('refreshToken', refresh);
+    } catch (error) {
+      setError('Invalid credentials');
+      console.error('Login failed:', error);
+    }
+  };
 
   return (
-    <ThemeProvider theme={theme}>
-      <Container component="main" maxWidth="xs">
-        <CssBaseline />
-        <Box
-          sx={{
-            marginTop: 8,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-          }}
-        >
-          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-            <LockOutlinedIcon />
-          </Avatar>
-          <Typography component="h1" variant="h5">
-            Sign in
-          </Typography>
-          {error && <Typography color={"red"} component="h1" variant="h5">
-            {error}
-          </Typography>}
-          <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              id="email"
-              label="Email Address"
-              name="email"
-              autoComplete="email"
-              autoFocus
-            />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="password"
-              label="Password"
-              type="password"
-              id="password"
-              autoComplete="current-password"
-            />
-            <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
-              label="Remember me"
-            />
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-            >
-              Sign In
-            </Button>
-            <Grid container>
-              <Grid item xs>
-                <Link href="#" variant="body2">
-                  Forgot password?
-                </Link>
-              </Grid>
-              <Grid item>
-                <Link href="#" variant="body2">
-                  {"Don't have an account? Sign Up"}
-                </Link>
-              </Grid>
-            </Grid>
-          </Box>
-        </Box>
-      </Container>
-    </ThemeProvider>
+    <Stack minH={'100vh'} direction={{ base: 'column', md: 'row' }}>
+      <Flex p={8} flex={1} align={'center'} justify={'center'}>
+        <Stack spacing={4} w={'full'} maxW={'md'}>
+          <Heading fontSize={'2xl'}>Sign in to your account</Heading>
+          <form onSubmit={handleSubmit}>
+            <FormControl id="email">
+              <FormLabel>Email address</FormLabel>
+              <Input type="email" name="email" />
+            </FormControl>
+            <FormControl id="password">
+              <FormLabel>Password</FormLabel>
+              <Input type="password" name="password" />
+            </FormControl>
+            <Stack spacing={6}>
+              <Stack
+                direction={{ base: 'column', sm: 'row' }}
+                align={'start'}
+                justify={'space-between'}>
+                <Checkbox>Remember me</Checkbox>
+                <Stack direction={{base:"row"}} justify={'space-between'} >
+                <Text color={'blue.500'}>Forgot password?</Text>
+                <Link to="/register" color={'blue.500'}>or Sign up</Link>
+                </Stack>
+                
+              </Stack>
+              <Button type="submit" colorScheme={'blue'} variant={'solid'}>
+                Sign in
+              </Button>
+            </Stack>
+            {error && (
+              <Text color={'red.500'} fontSize={'sm'}>
+                {error}
+              </Text>
+            )}
+          </form>
+        </Stack>
+      </Flex>
+      <Flex flex={1}>
+        <Image
+          alt={'Login Image'}
+          objectFit={'cover'}
+          src={
+            'https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1352&q=80'
+          }
+        />
+      </Flex>
+    </Stack>
   );
 }

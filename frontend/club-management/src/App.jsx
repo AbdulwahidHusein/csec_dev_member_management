@@ -1,25 +1,22 @@
 import React, { useEffect, useState } from 'react';
-import { BrowserRouter as Router, Route, Routes,  Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Navigate, Route, Routes } from 'react-router-dom';
 import axios from 'axios';
-import Event from './pages/events/Event';
-import Team from './pages/team/Team';
-import Profile from './pages/profile/Profile';
-import Community from './pages/community/Community';
-import Nopage from './pages/Nopage';
-import SignIn from './pages/auth/login';
-import SignUp from './pages/auth/registration';
-import { UserProvider } from './UserContext';
+
 import { useContext } from 'react';
 import { UserContext } from './UserContext';
 import "./App.css";
-import Header from './components/Header';
-import { CircularProgress } from '@material-ui/core';
 
+import './App.css'
+import SidebarWithHeader from "./components/Sidebar";
+
+import { ChakraProvider } from "@chakra-ui/react"
+import LoginPage from './pages/auth/login';
+import SignUP from './pages/auth/registration';
 
 function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true);
-  const {setUserData} = useContext(UserContext);
+  const { setUserData } = useContext(UserContext);
 
   useEffect(() => {
     const checkAuthentication = async () => {
@@ -32,15 +29,13 @@ function App() {
             },
           });
           setUserData(response.data);
-          //console.log(response.data)
           setIsAuthenticated(true);
         } else {
-          // If there is no access token, redirect to the login page
-          setIsAuthenticated(true);
+          setIsAuthenticated(false);
         }
       } catch (error) {
         console.log(error)
-        setIsAuthenticated(true);
+        setIsAuthenticated(false);
       } finally {
         setLoading(false);
       }
@@ -50,16 +45,38 @@ function App() {
   }, []);
 
   if (loading) {
-    <div className="centered-container">
-    <CircularProgress disableShrink />
-  </div>
+    return (
+      <div className="centered-container">
+        Loading...
+      </div>
+    );
   }
 
   return (
     <Router>
+      <ChakraProvider>
+        <Routes>
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<SignUP />} />
+          <Route
+            path="/"
+            element={
+              isAuthenticated ? <SidebarWithHeader /> : <Navigate to="/login" />
+            }
+          />
+        </Routes>
+      </ChakraProvider>
+    </Router>
+  )
+}
+
+export default App;
+
+/**
+ * 
+ *  
       <div style={{ paddingTop: '64px' }}>
-        <Sidebar />
-        <Header isAuthenticated={isAuthenticated} />
+
         <Routes>
           <Route path="/" element={isAuthenticated ? <Event /> : <Navigate to="/login" />} />
           <Route path="/my-team" element={isAuthenticated ? <Team /> : <Navigate to="/login" />} />
@@ -67,11 +84,7 @@ function App() {
           <Route path="/community" element={isAuthenticated ? <Community /> : <Navigate to="/login" />} />
           <Route path="/login" element={!isAuthenticated ? <SignIn /> : <Navigate to="/" />} />
           <Route path="/register" element={!isAuthenticated ? <SignUp /> : <Navigate to="/" />} />
-          <Route path="*" element={<Nopage />} />
         </Routes>
       </div>
-    </Router>
-  );
-}
-
-export default App;
+ * 
+ */

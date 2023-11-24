@@ -1,15 +1,6 @@
-import { useContext } from 'react';
-import { UserContext } from '../../UserContext';
-
-function Community (){
-    const { userData } = useContext(UserContext);
-    console.log(userData)
-    console.log("community page")
+export default function Community(){
     return (
         <>
-        community page
-        </>
+        community page</>
     )
 }
-
-export default Community;
