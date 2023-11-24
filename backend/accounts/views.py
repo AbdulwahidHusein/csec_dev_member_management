@@ -21,6 +21,10 @@ from .custom_permissions import IsIdUsers, IsUSerTeamMember
 class AuthViewset(viewsets.ModelViewSet):
     authentication_classes = [JWTAuthentication]
     queryset = CustomUser.objects.all()
+    
+    def get_serializer_class(self):
+        if self.action == "login":
+            return MemberLoginSerializer
     def get_permissions(self):
         if self.action == "login":
             return []
