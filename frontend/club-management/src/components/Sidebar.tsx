@@ -36,7 +36,8 @@ import {
 } from 'react-icons/fi';
 import { IconType } from 'react-icons'
 import { UserContext } from "../UserContext";
-import  { useContext, useState } from 'react';
+import  { useContext, useState, useEffect } from 'react';
+import axios from 'axios';
 
 interface LinkItemProps {
   name: string
@@ -68,7 +69,7 @@ interface SidebarProps extends BoxProps {
 }
 
 const LinkItems: Array<LinkItemProps> = [
-  { name: 'Home', icon: FiHome, To:"" },
+  { name: 'divisions', icon: FiHome, To:"/divisions" },
   { name: 'Events', icon: FiCalendar, To:"/events" },
   { name: 'Community', icon: FiFlag , To:"/community"},
   { name: 'Announcements', icon: FiMessageSquare,To:"/announcemets" },
@@ -76,7 +77,15 @@ const LinkItems: Array<LinkItemProps> = [
   {name: "Members", icon: FiUsers, To:"members"},
 ]
 
+const AdminLinkItems : Array<LinkItemProps> = [
+ {name: "Dashboard", icon: FiUsers, To:""},
+ {name: "Announce Events", icon: FiUsers, To:"create-event"},
+
+]
+
 const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
+  const { userData } = useContext(UserContext);
+
   return (
     <Box
       transition="3s ease"
@@ -93,6 +102,16 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
         </Text>
         <CloseButton display={{ base: 'flex', md: 'none' }} onClick={onClose} />
       </Flex>
+      {userData && userData.member_data.is_admin  && AdminLinkItems.map(
+        (link)=>(
+          <NavItem key={link.name} icon={link.icon}>
+          <Link to={link.To} >
+          {link.name}
+         </Link>
+        </NavItem>
+        )
+      )
+      }
       {LinkItems.map((link) => (
         <NavItem key={link.name} icon={link.icon}>
           <Link to={link.To} >
@@ -212,11 +231,44 @@ const SidebarWithHeader = () => {
   const { userData } = useContext(UserContext);
   const [profileData, setProfileData] = useState(userData?.member_data || {});
   const { isOpen, onOpen, onClose } = useDisclosure()
+  const [isAuthenticated, setIsAuthenticated] = useState(true);
+  const [loading, setLoading] = useState(true);
+  const { setUserData } = useContext(UserContext);
+  const [isAdmin, setIsAdmin] = useState(false);
+  useEffect(() => {
+    const checkAuthentication = async () => {
+      try {
+        const accessToken = localStorage.getItem('accessToken');
+        if (accessToken) {
+          const response = await axios.get('http://127.0.0.1:8000/members/get_details/', {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          });
+          setUserData(response.data);
+          if (response.data.member_data.is_admin){
+            setIsAdmin(true);
+          }
+          console.log(userData)
+          setIsAuthenticated(true);
+        } else {
+          setIsAuthenticated(false);
+        }
+      } catch (error) {
+        console.log(error)
+        setIsAuthenticated(false);
+      } finally {
+        setLoading(false);
+      }
+    };
 
+    checkAuthentication();
+  }, []);
   return (
     <Box minH="100vh" bg={useColorModeValue('gray.100', 'gray.900')}>
-      <SidebarContent onClose={() => onClose} display={{ base: 'none', md: 'block' }} />
-      <Drawer
+
+    <SidebarContent onClose={() => onClose} display={{ base: 'none', md: 'block' }} />
+     <Drawer
         isOpen={isOpen}
         placement="left"
         onClose={onClose}
@@ -232,18 +284,24 @@ const SidebarWithHeader = () => {
       <Box ml={{ base: 0, md: 60 }} p="4">
 
           <Routes>
-   
+            {
+            isAdmin ? <><Route path="/create-event" element={<CreateEventPage />}  />
             <Route path="/" element={<HomePage />} />
+            </>:null
+            }
+  
+            {isAuthenticated ?<>
             <Route path="/profile" element={<Profile />} />
             <Route path="/Community" element={<Community />} />
             <Route path="/events" element={<Event />} />
             <Route path="/my-teams" element={<Team />} />
             <Route path="/announcemets" element={<AnnouncementPage />} />
-            <Route path="/create-event" element={<CreateEventPage />}  />
-            <Route path="/members" element={<UsersList/>}  />
-            <Route path="/register" element={<SignUP />} />
-            <Route path="/login" element={<LoginPage />} />
             
+            <Route path="/members" element={<UsersList/>}  /></>
+            :
+           <> <Route path="/register" element={<SignUP />} />
+            <Route path="/login" element={<LoginPage />} />
+  </>}
           </Routes>
 
       </Box>

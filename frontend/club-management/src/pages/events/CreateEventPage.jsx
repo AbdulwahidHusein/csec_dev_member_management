@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import {
   Box,
   Button,
@@ -12,23 +12,78 @@ import {
   InputLeftElement,
   Stack,
   Textarea,
-  useClipboard,
   useColorModeValue,
   VStack,
+  Text,
+  AlertDialog,
+  AlertDialogOverlay,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogBody,
+  AlertDialogFooter,
+  CloseButton
 } from '@chakra-ui/react';
 import { BsCalendar, BsClock } from 'react-icons/bs';
+import axios from 'axios';
+import { Navigate } from 'react-router-dom';
+import { CheckCircleIcon } from '@chakra-ui/icons';
+
+function Success({ onClose }) {
+  return (
+    <AlertDialog isOpen={true} onClose={onClose}>
+      <AlertDialogOverlay />
+      <AlertDialogContent>
+        <AlertDialogHeader fontSize="lg" fontWeight="bold">
+          Event was Created
+        </AlertDialogHeader>
+        <AlertDialogBody>
+          <CheckCircleIcon boxSize={'50px'} color={'green.500'} />
+          <Text color={'gray.500'}>
+            The event was successfully created, and an email notification will be sent!
+          </Text>
+        </AlertDialogBody>
+        <AlertDialogFooter>
+          <Button colorScheme="blue" onClick={onClose}>
+            Close
+          </Button>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+  );
+}
 
 function EventCreationForm() {
-  const { hasCopied, onCopy } = useClipboard('example@example.com');
+  const [success, setSuccess] = useState(false);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  const [date, setDate] = useState('');
-  const [time, setTime] = useState('');
+  const [start_date, setDate] = useState('');
+  const [start_time, setTime] = useState('');
+  const [duration, setDuration] = useState('');
   const [sendNotification, setSendNotification] = useState(false);
+  const [error, setError] = useState('');
 
-  const handleFormSubmit = (e) => {
+  const handleFormSubmit = async (e) => {
     e.preventDefault();
-    // Handle form submission here
+    const formData = {
+      title: title,
+      description: description,
+      start_date: start_date,
+      start_time: start_time,
+      duration: duration
+    };
+
+    try {
+      const response = await axios.post('http://127.0.0.1:8000/events/', formData);
+      console.log(formData);
+      setSuccess(true);
+    } catch (error) {
+      setError('');
+      console.error(error);
+    }
+  };
+
+  const handleCloseSuccess = () => {
+    setSuccess(false);
   };
 
   return (
@@ -61,7 +116,6 @@ function EventCreationForm() {
             >
               Create Event
             </Heading>
-
             <form onSubmit={handleFormSubmit} style={{ width: '100%' }}>
               <Stack spacing={{ base: 4, md: 8 }}>
                 <FormControl isRequired>
@@ -103,8 +157,8 @@ function EventCreationForm() {
                     </InputLeftElement>
                     <Input
                       type="date"
-                      name="date"
-                      value={date}
+                      name="start_date"
+                      value={start_date}
                       onChange={(e) => setDate(e.target.value)}
                       width="100%"
                     />
@@ -114,37 +168,51 @@ function EventCreationForm() {
                 <FormControl isRequired>
                   <FormLabel>Time</FormLabel>
                   <InputGroup>
+```jsx
                     <InputLeftElement>
                       <BsClock />
                     </InputLeftElement>
                     <Input
                       type="time"
-                      name="time"
-                      value={time}
+                      name="start_time"
+                      value={start_time}
                       onChange={(e) => setTime(e.target.value)}
                       width="100%"
                     />
                   </InputGroup>
                 </FormControl>
 
-                <FormControl>
-                  <Checkbox
-                    isChecked={sendNotification}
-                    onChange={(e) => setSendNotification(e.target.checked)}
-                  >
-                    Send Notification Email
-                  </Checkbox>
+                <FormControl isRequired>
+                  <FormLabel>Duration (in minutes)</FormLabel>
+                  <InputGroup>
+                    <InputLeftElement>
+                      <BsClock />
+                    </InputLeftElement>
+                    <Input
+                      type="number"
+                      name="duration"
+                      value={duration}
+                      onChange={(e) => setDuration(e.target.value)}
+                      width="100%"
+                    />
+                  </InputGroup>
                 </FormControl>
+
+                <Checkbox
+                  colorScheme="blue"
+                  isChecked={sendNotification}
+                  onChange={(e) => setSendNotification(e.target.checked)}
+                >
+                  Send Notification
+                </Checkbox>
 
                 <Button
                   type="submit"
                   colorScheme="blue"
-                  bg="blue.400"
-                  color="white"
-                  _hover={{
-                    bg: 'blue.500',
-                  }}
-                  width="full"
+                  size="lg"
+                  fontSize="md"
+                  fontWeight="bold"
+                  width="100%"
                 >
                   Create Event
                 </Button>
@@ -153,12 +221,9 @@ function EventCreationForm() {
           </VStack>
         </Box>
       </Box>
+      {success && <Success onClose={handleCloseSuccess} />}
     </Flex>
   );
 }
 
-function CreateEventPage() {
-  return <EventCreationForm />;
-}
-
-export default CreateEventPage;
+export default EventCreationForm;

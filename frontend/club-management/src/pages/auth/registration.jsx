@@ -18,6 +18,7 @@ import {
   import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
   import { UserContext } from '../../UserContext';
 import axios from 'axios';
+import { Form } from 'react-router-dom';
   export default function SignUp() {
     const [showPassword, setShowPassword] = useState(false);
     const { setUserData } = useContext(UserContext);
@@ -25,35 +26,41 @@ import axios from 'axios';
       full_name: '',
       phone_number: '',
       profile_picture: null,
-      department: '',
+      departement: '',
       study_year: null,
       github_link: '',
       portfolio_link: '',
       linkedin_link: '',
       bio: '',
       leetcode_link: '',
-      code_forces_link: '',
-      hacker_rank_link: '',
       email: '',
       password: '',
       confirmPassword: '',
     });
   
     const handleChange = (e) => {
-      const { name, value } = e.target;
-      setFormData((prevData) => ({
-        ...prevData,
-        [name]: value,
-      }));
-    };
+        const { name, value } = e.target;
+        if (name === 'email' || name === 'password') {
+          setFormData((prevData) => ({
+            ...prevData,
+            user: {
+              ...prevData.user,
+              [name]: value,
+            },
+          }));
+        } else {
+          setFormData((prevData) => ({
+            ...prevData,
+            [name]: value,
+          }));
+        }
+      };
   
     const handleSubmit = async (e) => {
       e.preventDefault();
-      formData.user["email"] = formData.email;
-      formData.user["password"] = formData.password;
- 
       delete formData.email;
       delete formData.password;
+      delete formData.confirmPassword;
       
       console.log(formData);
     
@@ -68,7 +75,6 @@ import axios from 'axios';
       localStorage.setItem('refreshToken', refresh);
       } catch (error) {
         // Handle the error
-        //console.log(response.data)
         console.error('Registration failed:', error);
       }
       console.log(formData);
@@ -111,9 +117,9 @@ import axios from 'axios';
                   <FormLabel>Profile Picture</FormLabel>
                   <Input type="file" name="profile_picture" onChange={handleChange} />
                 </FormControl>
-                <FormControl id="department" isRequired>
+                <FormControl id="departement" isRequired>
                   <FormLabel>Department</FormLabel>
-                  <Input type="text" name="department" onChange={handleChange} />
+                  <Input type="text" name="departement" onChange={handleChange} />
                 </FormControl>
                 <FormControl id="study_year">
                   <FormLabel>Study Year</FormLabel>
