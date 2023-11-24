@@ -4,10 +4,12 @@ from rest_framework import serializers
 
 
 class CustomUserSerializer(serializers.ModelSerializer):
+    email = serializers.EmailField()
+    password = serializers.CharField()
     class Meta:
         model = CustomUser
         fields = [
-            "email", "password"
+            "email", "password",
         ]
         
 class MemberSerializer(serializers.ModelSerializer):
@@ -18,14 +20,13 @@ class MemberSerializer(serializers.ModelSerializer):
             "departement", "study_year", "github_link",
             "portfolio_link", "linkedin_link", "bio"
         ]
-        
+
 class MemberRegistrationSerializer(serializers.ModelSerializer):
     user = CustomUserSerializer()
     class Meta:
         model = Member
         fields = [
-            "user",
-            "full_name", "phone_number","profile_picture",
+            "user", "full_name", "phone_number","profile_picture",
             "departement", "study_year", "github_link",
             "portfolio_link", "linkedin_link", "bio"
         ]

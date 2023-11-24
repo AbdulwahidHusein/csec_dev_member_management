@@ -12,7 +12,7 @@ from .serializers import (
     MemberLoginSerializer,
     MemberRegistrationSerializer,
     TeameCreationSerializer,
-    TeamApproveSerializer
+    TeamApproveSerializer, CustomUserSerializer
 )
 from django.db import transaction
 from .models import Member, CustomUser, Team
@@ -36,6 +36,8 @@ class AuthViewset(viewsets.ModelViewSet):
             member = Member.objects.get(user=user)
             serializer = MemberSerializer(instance=member)
             member_data = serializer.data
+            member_data["is_admin"] = user.is_superuser
+            
         except:
             pass
         refresh = RefreshToken.for_user(user)
@@ -52,7 +54,13 @@ class MemberViewSet(viewsets.ModelViewSet):
     #permission_classes = [permissions.IsAdminUser]
     authentication_classes = [JWTAuthentication]
     queryset = Member.objects.all()
-    serializer_class = MemberSerializer
+    def get_serializer_class(self):
+        if self.action == "register":
+            return MemberRegistrationSerializer
+        elif self.action == "login":
+            return CustomUserSerializer
+        else:
+            return MemberSerializer
 
     def partial_update(self, request, pk=None):
         member = self.get_object()
@@ -80,15 +88,14 @@ class MemberViewSet(viewsets.ModelViewSet):
     @transaction.atomic
     @action(detail=False, methods=['post'])
     def register(self, request):
+        print(request.data)
         serializer = MemberRegistrationSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        
+        serializer.is_valid()
         user_data = serializer.validated_data.pop('user')
         user = CustomUser.objects.create_user(**user_data)
-        
-        member = Member(user=user, **serializer.validated_data)
+        serializer.validated_data["user"] = user
+        member = Member(**serializer.validated_data)
         member.save()
-
         refresh = RefreshToken.for_user(user)
 
         return Response({
@@ -106,6 +113,7 @@ class MemberViewSet(viewsets.ModelViewSet):
             serializer = MemberSerializer(instance=member)
             member_data = serializer.data
             member_data["email"] = user.email
+            member_data["is_admin"] = user.is_superuser
         except:
             pass
         
@@ -132,3 +140,4 @@ class TeamViewSet(viewsets.ModelViewSet):
         serializer = TeamApproveSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
+        
