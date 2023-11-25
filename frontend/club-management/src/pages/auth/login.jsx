@@ -33,12 +33,12 @@ export default function LoginPage() {
 
       console.log('Login successful');
       setUserData(response.data);
-      console.log(response.data);
+      console.log(response.data.access);
 
-      const { access } = response.data.access;
-      const { refresh } = response.data.refresh;
+      const { access, refresh } = response.data;
       localStorage.setItem('accessToken', access);
       localStorage.setItem('refreshToken', refresh);
+      
     } catch (error) {
       setError('Invalid credentials');
       console.error('Login failed:', error);

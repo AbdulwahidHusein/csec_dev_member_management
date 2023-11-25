@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import EventCard from '../../components/EventCard';
+import { Table } from '@chakra-ui/react';
 
 function Event() {
   const [eventData, setEventData] = useState([]);
@@ -17,9 +18,20 @@ function Event() {
 
     fetchEventData();
   }, []);
+  const props = {
+    logo: "",
+    name: "name of person",
+    status: "55",
+    budget: "77",
+    progression: "55",
+    lastItem: "55",
+  };
 
   return (
     <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px' }}>
+      <Table>
+      </Table>
+     
       {eventData.map((evt) => (
         <EventCard key={evt.title} eventData={evt} />
       ))}

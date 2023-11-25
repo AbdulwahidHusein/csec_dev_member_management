@@ -65,6 +65,7 @@ interface MobileProps extends FlexProps {
 }
 
 interface SidebarProps extends BoxProps {
+  admin: boolean,
   onClose: () => void
 }
 
@@ -74,37 +75,38 @@ const LinkItems: Array<LinkItemProps> = [
   { name: 'Community', icon: FiFlag , To:"/community"},
   { name: 'Announcements', icon: FiMessageSquare,To:"/announcemets" },
   { name: 'My Teams', icon: FiUsers, To:"/my-teams" },
-  {name: "Members", icon: FiUsers, To:"members"},
+  
 ]
 
 const AdminLinkItems : Array<LinkItemProps> = [
+
  {name: "Dashboard", icon: FiUsers, To:""},
  {name: "Announce Events", icon: FiUsers, To:"create-event"},
+ {name: "Members", icon: FiUsers, To:"members"},
 
 ]
 
-const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
-  const { userData } = useContext(UserContext);
+const SidebarContent = ({admin, onClose, ...rest }: SidebarProps) => {
 
   return (
     <Box
       transition="3s ease"
-      bg={useColorModeValue('white', 'gray.900')}
+      bg={useColorModeValue('#060c14', 'gray.900')}
       borderRight="1px"
-      borderRightColor={useColorModeValue('gray.200', 'gray.700')}
+      borderRightColor={useColorModeValue('#030c19', 'gray.700')}
       w={{ base: 'full', md: 60 }}
       pos="fixed"
       h="full"
       {...rest}>
       <Flex h="20" alignItems="center" mx="8" justifyContent="space-between">
-        <Text fontSize="2xl" fontFamily="monospace" fontWeight="bold">
+        <Text fontSize="2xl" fontFamily="monospace" color={"white"} fontWeight="bold">
           CSEC ASTU
         </Text>
         <CloseButton display={{ base: 'flex', md: 'none' }} onClick={onClose} />
       </Flex>
-      {userData && userData.member_data.is_admin  && AdminLinkItems.map(
+      {admin  && AdminLinkItems.map(
         (link)=>(
-          <NavItem key={link.name} icon={link.icon}>
+          <NavItem color={"white"} key={link.name} icon={link.icon}>
           <Link to={link.To} >
           {link.name}
          </Link>
@@ -113,8 +115,8 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
       )
       }
       {LinkItems.map((link) => (
-        <NavItem key={link.name} icon={link.icon}>
-          <Link to={link.To} >
+        <NavItem color={"white"} key={link.name} icon={link.icon}>
+          <Link color={"white"} to={link.To} >
           {link.name}
          </Link>
         </NavItem>
@@ -159,6 +161,7 @@ const NavItem = ({ icon, children, ...rest }: NavItemProps) => {
 }
 
 const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
+  const { userData } = useContext(UserContext);
   return (
     <Flex
       ml={{ base: 0, md: 60 }}
@@ -175,10 +178,11 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
         onClick={onOpen}
         variant="outline"
         aria-label="open menu"
+        backgroundColor={"white"}
         icon={<FiMenu />}
       />
 
-      <Text
+      <Text color={"white"}
         display={{ base: 'flex', md: 'none' }}
         fontSize="2xl"
         fontFamily="monospace"
@@ -187,7 +191,7 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
       </Text>
 
       <HStack spacing={{ base: '0', md: '6' }}>
-        <IconButton size="lg" variant="ghost" aria-label="open menu" icon={<FiBell />} />
+        <IconButton size="lg" variant="ghost"color={"white"} aria-label="open menu" icon={<FiBell />} />
         <Flex alignItems={'center'}>
           <Menu>
             <MenuButton py={2} transition="all 0.3s" _focus={{ boxShadow: 'none' }}>
@@ -195,7 +199,7 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
                 <Avatar
                   size={'sm'}
                   src={
-                    'https://images.unsplash.com/photo-1619946794135-5bc917a27793?ixlib=rb-0.3.5&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&s=b616b2c5b373a80ffc9636ba24f7a4a9'
+                    ""
                   }
                 />
                 <VStack
@@ -203,10 +207,11 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
                   alignItems="flex-start"
                   spacing="1px"
                   ml="2">
-                  <Text fontSize="sm">Abdulwahid Hussen</Text>
-                  <Text fontSize="xs" color="gray.600">
-                    Admin
-                  </Text>
+                  <Text color={"white"}
+                fontSize="sm">{userData.member_data.full_name}</Text>
+                  
+                    {userData.member_data.is_admin ? <Text fontSize="xs" color="white">Admin</Text>:<Text fontSize="xs" color="white">Member</Text>  }
+                  
                 </VStack>
                 <Box display={{ base: 'none', md: 'flex' }}>
                   <FiChevronDown />
@@ -229,9 +234,9 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
 
 const SidebarWithHeader = () => {
   const { userData } = useContext(UserContext);
-  const [profileData, setProfileData] = useState(userData?.member_data || {});
+
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const [isAuthenticated, setIsAuthenticated] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true);
   const { setUserData } = useContext(UserContext);
   const [isAdmin, setIsAdmin] = useState(false);
@@ -239,6 +244,7 @@ const SidebarWithHeader = () => {
     const checkAuthentication = async () => {
       try {
         const accessToken = localStorage.getItem('accessToken');
+        console.log(accessToken)
         if (accessToken) {
           const response = await axios.get('http://127.0.0.1:8000/members/get_details/', {
             headers: {
@@ -250,6 +256,7 @@ const SidebarWithHeader = () => {
             setIsAdmin(true);
           }
           console.log(userData)
+          
           setIsAuthenticated(true);
         } else {
           setIsAuthenticated(false);
@@ -259,6 +266,7 @@ const SidebarWithHeader = () => {
         setIsAuthenticated(false);
       } finally {
         setLoading(false);
+       
       }
     };
 
@@ -267,8 +275,8 @@ const SidebarWithHeader = () => {
   return (
     <Box minH="100vh" bg={useColorModeValue('gray.100', 'gray.900')}>
 
-    <SidebarContent onClose={() => onClose} display={{ base: 'none', md: 'block' }} />
-     <Drawer
+    {isAuthenticated && <SidebarContent  onClose={() => onClose} display={{ base: 'none', md: 'block' }} admin={isAdmin}/>}
+     {isAuthenticated && <Drawer
         isOpen={isOpen}
         placement="left"
         onClose={onClose}
@@ -276,12 +284,12 @@ const SidebarWithHeader = () => {
         onOverlayClick={onClose}
         size="full">
         <DrawerContent>
-          <SidebarContent onClose={onClose} />
+          <SidebarContent admin={isAdmin} onClose={onClose} />
         </DrawerContent>
-      </Drawer>
+      </Drawer>}
       {/* mobilenav */}
-      <MobileNav onOpen={onOpen} />
-      <Box ml={{ base: 0, md: 60 }} p="4">
+      {isAuthenticated && <MobileNav background={"#060c14"} onOpen={onOpen} />}
+      <Box ml={{ base: 0, md: 60 }}  p="4">
 
           <Routes>
             {

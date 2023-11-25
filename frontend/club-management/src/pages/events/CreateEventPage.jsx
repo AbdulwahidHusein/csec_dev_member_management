@@ -28,6 +28,7 @@ import axios from 'axios';
 import { Navigate } from 'react-router-dom';
 import { CheckCircleIcon } from '@chakra-ui/icons';
 
+
 function Success({ onClose }) {
   return (
     <AlertDialog isOpen={true} onClose={onClose}>
@@ -88,7 +89,7 @@ function EventCreationForm() {
 
   return (
     <Flex
-      bg={useColorModeValue('gray.100', 'gray.900')}
+      bg={useColorModeValue('white', 'gray.900')}
       align="center"
       justify="center"
       css={{
@@ -96,15 +97,15 @@ function EventCreationForm() {
       }}
       id="contact"
     >
+      
       <Box
         borderRadius="lg"
         m={{ base: 5, md: 16, lg: 10 }}
         p={{ base: 5, lg: 16 }}
         boxShadow="xl"
-        bg={useColorModeValue('white', 'gray.800')}
+        bg={useColorModeValue('gray.100', 'gray.800')}
         width={{ base: 'full', md: 'auto' }}
-        maxW="900px"
-        minW="500px"
+
       >
         <Box>
           <VStack spacing={{ base: 4, md: 8, lg: 20 }}>
@@ -168,7 +169,7 @@ function EventCreationForm() {
                 <FormControl isRequired>
                   <FormLabel>Time</FormLabel>
                   <InputGroup>
-```jsx
+
                     <InputLeftElement>
                       <BsClock />
                     </InputLeftElement>

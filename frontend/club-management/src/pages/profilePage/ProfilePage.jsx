@@ -121,15 +121,6 @@ function SocialProfileWithImage() {
     </Center>
   )
 }
-
-
-
-
-
-
- 
- 
- 
  
  function Profile (){
   return (<>

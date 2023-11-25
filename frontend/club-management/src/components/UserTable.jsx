@@ -19,8 +19,8 @@ function UserRow(props) {
           {isChecked ? 'Approved' : 'Approve'}
         </Checkbox>
       </Td>
-      <Td data-type='Td'>{props.ud.fullname}</Td>
-      <Td data-type='Td'>{props.ud.email}</Td>
+      <Td data-type='Td'>{props.ud.full_name}</Td>
+      <Td data-type='Td'>{props.ud.phone_number}</Td>
       <Td data-type='Td' isNumeric>
         {props.ud.department}
       </Td>

@@ -16,9 +16,10 @@ class MemberSerializer(serializers.ModelSerializer):
     class Meta:
         model = Member
         fields = [
+            "id",
             "full_name", "phone_number","profile_picture",
             "departement", "study_year", "github_link",
-            "portfolio_link", "linkedin_link", "bio"
+            "portfolio_link", "linkedin_link", "bio", "approved"
         ]
 
 class MemberRegistrationSerializer(serializers.ModelSerializer):
@@ -63,5 +64,5 @@ class TeamApproveSerializer(serializers.ModelSerializer):
     class Meta:
         model = Team
         fields = [
-            "approved"
+            "approved", "id"
         ]
