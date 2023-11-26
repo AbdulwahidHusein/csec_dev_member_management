@@ -14,6 +14,9 @@ from pathlib import Path
 from datetime import timedelta
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+from dotenv import load_dotenv
+import os
+load_dotenv()
 
 
 # Quick-start development settings - unsuitable for production
@@ -118,13 +121,11 @@ SIMPLE_JWT = {
     'REFRESH_TOKEN_LIFETIME': timedelta(days=7),     # Increase refresh token lifespan to 7 days
 }
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'your-smtp-server.com'
+EMAIL_HOST = os.getenv("email")
 EMAIL_PORT = 587  # Port number for SMTP
-EMAIL_HOST_USER = 'your-email@example.com'
-EMAIL_HOST_PASSWORD = 'your-email-password'
+EMAIL_HOST_USER = os.getenv("email_username")
+EMAIL_HOST_PASSWORD = os.getenv("email_password")
 EMAIL_USE_TLS = True  # Use TLS encryption
-DEFAULT_FROM_EMAIL = 'your-email@example.com'  # Default sender email address
-# Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
 LANGUAGE_CODE = 'en-us'
