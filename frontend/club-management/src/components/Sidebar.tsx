@@ -1,6 +1,6 @@
 'use client'
 import React from 'react';
-import { BrowserRouter as Router, Route,Link, NavLink, Routes } from 'react-router-dom'
+import { BrowserRouter as Router, Route,Link, NavLink, Routes, useNavigate } from 'react-router-dom'
 
 import {
   IconButton,
@@ -240,6 +240,7 @@ const SidebarWithHeader = () => {
   const [loading, setLoading] = useState(true);
   const { setUserData } = useContext(UserContext);
   const [isAdmin, setIsAdmin] = useState(false);
+  const navigate = useNavigate();
   useEffect(() => {
     const checkAuthentication = async () => {
       try {
@@ -272,6 +273,10 @@ const SidebarWithHeader = () => {
 
     checkAuthentication();
   }, []);
+  const handleLoginNavigation = () => {
+    navigate("/login");
+  };
+
   return (
     <Box minH="100vh" bg={useColorModeValue('gray.100', 'gray.900')}>
 
@@ -311,7 +316,7 @@ const SidebarWithHeader = () => {
             <Route path="/login" element={<LoginPage />} />
   </>}
           </Routes>
-
+          {!isAuthenticated && handleLoginNavigation()}
       </Box>
     </Box>
   )

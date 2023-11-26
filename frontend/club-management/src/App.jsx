@@ -1,21 +1,27 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState , useContext} from 'react';
 import { BrowserRouter as Router, Navigate, Route, Routes } from 'react-router-dom';
 
 import "./App.css";
 
 import './App.css'
 import SidebarWithHeader from "./components/Sidebar";
-
+import { UserContext } from './UserContext';
 import { ChakraProvider } from "@chakra-ui/react"
-
+import LoginPage from './pages/auth/login';
 
 function App() {
- 
+const [isAuthenticated, setIsAuthnticated] = useState(false);
+const {userData} = useContext(UserContext);
+useEffect(
+  ()=>{
+    userData ? setIsAuthnticated(true): setIsAuthnticated(false)
+  }, []
+)
 
   return (
     <Router>
-      <ChakraProvider>
-          <SidebarWithHeader />
+       <ChakraProvider>
+   <SidebarWithHeader />       
       </ChakraProvider>
     </Router>
   )

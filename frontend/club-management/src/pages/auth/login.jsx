@@ -11,7 +11,7 @@ import {
   Stack,
   Image,
 } from '@chakra-ui/react';
-import { Link } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 
 import axios from 'axios';
 import { UserContext } from '../../UserContext';
@@ -34,7 +34,7 @@ export default function LoginPage() {
       console.log('Login successful');
       setUserData(response.data);
       console.log(response.data.access);
-
+      Navigate("/")
       const { access, refresh } = response.data;
       localStorage.setItem('accessToken', access);
       localStorage.setItem('refreshToken', refresh);
