@@ -8,7 +8,7 @@ class Post(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     creator = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True, blank=True)
     image = models.ImageField(upload_to="images/community/posts")
-    likes =models.IntegerField()
+    likes =models.IntegerField(default=0)
     
     def __str__(self) -> str:
         return self.title

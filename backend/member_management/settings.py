@@ -81,12 +81,17 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'member_management.wsgi.application'
 
-
+DB_PASSWORD = os.getenv("DB_PASSWORD")
+DB_USER = os.getenv("DB_USER")
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'railway',
+        'USER': DB_USER,
+        'PASSWORD': DB_PASSWORD,
+        'HOST': 'viaduct.proxy.rlwy.net',
+        'PORT': '28125',
     }
 }
 
