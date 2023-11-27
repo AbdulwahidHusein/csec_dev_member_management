@@ -26,7 +26,6 @@ The frontend is built using React, and the directory structure is as follows:
 - **src/**
   - **components/**: Contains reusable components used throughout the application.
   - **pages/**: Contains different pages of the application, such as Home, Community, Divisions, etc.
-  - **services/**: Contains service files responsible for API communication.
   - **utils/**: Contains utility functions and helpers.
   - **App.js**: The main entry point of the React application.
   - **index.js**: Renders the React application into the HTML root element.
@@ -35,7 +34,7 @@ The frontend is built using React, and the directory structure is as follows:
 
 The backend is developed using Django REST Framework (DRF), and the directory structure is as follows:
 
-- **project/**
+- **member_management/**
   - **settings.py**: Contains the Django project settings, including database configurations, installed apps, etc.
   - **urls.py**: Defines the project-wide URL configurations.
 - **accounts/**: Contains the code related to user registration, authentication, and profile management.
