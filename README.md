@@ -1,51 +1,56 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>CSEC ASTU Club Management System</title>
-</head>
-<body>
-    <h1 style="background-color: #003366; color: #fff; padding: 20px; margin-top: 0;">CSEC ASTU Club Management System</h1>
+# CSEC ASTU Club Management System
 
-    <h2>Features</h2>
-    <div style="background-color: #f9f9f9; padding: 10px; border-radius: 5px; margin-bottom: 20px;">
-        <h3>User Registration</h3>
-        <p>Club members can register and create accounts with their details.</p>
-    </div>
+This is a Club Management System developed using Django REST Framework (DRF) and React. The system is designed specifically for the CSEC ASTU Club, allowing club members to register, administrators to control member approvals, event announcements, email notifications, community interactions, division management, and division joining requests.
 
-    <div style="background-color: #f9f9f9; padding: 10px; border-radius: 5px; margin-bottom: 20px;">
-        <h3>Admin Control</h3>
-        <p>Administrators have the ability to approve or reject member registrations.</p>
-    </div>
+## Features
 
-    <!-- Add more features here -->
+- User Registration: Club members can register and create accounts with their details.
+- Admin Control: Administrators have the ability to approve or reject member registrations.
+- Event Announcements: Users can create event announcements to notify club members.
+- Email Notifications: Email notifications are sent to users for specific events or actions.
+- Community Page: Users can share posts and interact with other community members.
+- Division Management: Administrators can create and manage different divisions within the club.
+- Division Joining Requests: Users can send requests to join specific divisions.
 
-    <h2>Project Structure</h2>
-    <p>The project follows a specific directory structure:</p>
+## Project Structure
 
-    <ul>
-        <li><strong>frontend/</strong>: Contains all the frontend-related files and code.</li>
-        <li><strong>backend/</strong>: Contains all the backend-related files and code.</li>
-    </ul>
+The project follows a specific directory structure:
 
-    <!-- Add more project structure details here -->
+- **frontend/**: Contains all the frontend-related files and code.
+- **backend/**: Contains all the backend-related files and code.
 
-    <h2>Getting Started</h2>
-    <p>To get started with the project, follow these steps:</p>
+### Frontend
 
-    <ol>
-        <li>Clone the repository: <code>git clone &lt;repository-url&gt;</code></li>
-        <li>Install the dependencies for the frontend: <code>cd frontend</code> and <code>npm install</code></li>
-        <li>Start the frontend server: <code>npm start</code></li>
-        <li>Install the dependencies for the backend: <code>cd backend</code> and <code>pip install -r requirements.txt</code></li>
-        <li>Configure the database settings in <code>backend/project/settings.py</code></li>
-        <li>Run the backend server: <code>python manage.py runserver</code></li>
-    </ol>
+The frontend is built using React, and the directory structure is as follows:
 
-    <!-- Add more getting started details here -->
+- **src/**
+  - **components/**: Contains reusable components used throughout the application.
+  - **pages/**: Contains different pages of the application, such as Home, Community, Divisions, etc.
+  - **services/**: Contains service files responsible for API communication.
+  - **utils/**: Contains utility functions and helpers.
+  - **App.js**: The main entry point of the React application.
+  - **index.js**: Renders the React application into the HTML root element.
 
-    <h2>Conclusion</h2>
-    <p>The CSEC ASTU Club Management System provides a comprehensive solution for managing club activities, member registrations, event announcements, community interactions, and division management. By leveraging Django REST Framework and React, the system offers a user-friendly interface and efficient backend architecture.</p>
+### Backend
 
-    <p>Feel free to explore the code and customize it according to your specific club requirements.</p>
-</body>
-</html>
+The backend is developed using Django REST Framework (DRF), and the directory structure is as follows:
+
+- **project/**
+  - **settings.py**: Contains the Django project settings, including database configurations, installed apps, etc.
+  - **urls.py**: Defines the project-wide URL configurations.
+- **accounts/**: Contains the code related to user registration, authentication, and profile management.
+- **events/**: Manages event creation, retrieval, and notifications.
+- **community/**: Handles the community page functionality, including post creation and interactions.
+- **divisions/**: Manages the divisions within the club, including division creation and joining requests.
+
+## Getting Started
+
+To get started with the project, follow these steps:
+
+1. Clone the repository: `git clone <repository-url>`
+2. Install the dependencies for the frontend: `cd frontend` and `npm install`
+3. Start the frontend server: `npm run devt`
+4. Install the dependencies for the backend: `cd backend` and `pip install -r requirements.txt`
+5. Configure the database settings in `backend/project/settings.py`
+6. Run the backend server: `python manage.py runserver`
+
