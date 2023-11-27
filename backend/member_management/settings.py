@@ -82,8 +82,6 @@ TEMPLATES = [
 WSGI_APPLICATION = 'member_management.wsgi.application'
 
 
-# Database
-# https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
     'default': {
@@ -93,8 +91,7 @@ DATABASES = {
 }
 
 
-# Password validation
-# https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
+# 
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -117,12 +114,12 @@ REST_FRAMEWORK = {
 }
 SIMPLE_JWT = {
     'AUTH_HEADER_TYPES': ('Bearer',),
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=300),  # Increase access token lifespan to 30 minutes
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),     # Increase refresh token lifespan to 7 days
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=300),  
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),    
 }
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = os.getenv("email")
-EMAIL_PORT = 587  # Port number for SMTP
+EMAIL_PORT = 587 
 EMAIL_HOST_USER = os.getenv("email_username")
 EMAIL_HOST_PASSWORD = os.getenv("email_password")
 EMAIL_USE_TLS = True  # Use TLS encryption
@@ -141,6 +138,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = 'static/'
+MEDIA_URL = "media/"
+MEDIA_ROOT = "media/"
 AUTH_USER_MODEL = "accounts.CustomUser"
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
@@ -158,6 +157,6 @@ LOGGING = {
     },
     'root': {
         'handlers': ['console'],
-        'level': 'DEBUG',  # Set the desired log level here
+        'level': 'DEBUG',  
     },
 }

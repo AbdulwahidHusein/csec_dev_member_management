@@ -27,7 +27,7 @@ class EventViewset(viewsets.ModelViewSet):
             members = Member.objects.filter(approved=True)
             email_list = [member.user.email for member in members]
             subject = event.title
-            message = f"A new event '{event.description}' has been announced."
+            message = f"{event.description}"
             from_email = "abdulwahidhussen750@gmail.com"
 
             send_mail(subject, message, from_email, email_list)
