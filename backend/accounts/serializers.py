@@ -13,6 +13,7 @@ class CustomUserSerializer(serializers.ModelSerializer):
         ]
         
 class MemberSerializer(serializers.ModelSerializer):
+    approved = serializers.BooleanField(read_only=True)
     class Meta:
         model = Member
         fields = [
@@ -65,4 +66,12 @@ class TeamApproveSerializer(serializers.ModelSerializer):
         model = Team
         fields = [
             "approved", "id"
+        ]
+
+class CustomUserMemberSerializer(serializers.ModelSerializer):
+    member = MemberSerializer()
+    class Meta:
+        model = CustomUser
+        fields = [
+            "member", "email"
         ]

@@ -1,7 +1,6 @@
 'use client'
 import React from 'react';
-import { BrowserRouter as Router, Route,Link, NavLink, Routes, useNavigate } from 'react-router-dom'
-
+import { BrowserRouter as Router, Route,Link, NavLink, Routes, useNavigate, Navigate } from 'react-router-dom'
 import {
   IconButton,
   Avatar,
@@ -54,6 +53,9 @@ import CreateEventPage from '../pages/events/CreateEventPage';
 import UsersList from '../pages/users/UsersList';
 import SignUP from '../pages/auth/registration';
 import LoginPage from '../pages/auth/login';
+import DivisionPage from '../pages/divisions/DivisionsPage';
+import BasicStatistics from './Stat';
+import SignOut from './SignOut';
 
 interface NavItemProps extends FlexProps {
   icon: IconType
@@ -76,17 +78,21 @@ const LinkItems: Array<LinkItemProps> = [
   { name: 'Announcements', icon: FiMessageSquare,To:"/announcemets" },
   { name: 'My Teams', icon: FiUsers, To:"/my-teams" },
   
+  
+]
+const AuthItems : Array <LinkItemProps> = [
+  {name: "Dashboard", icon: FiUsers, To:"/"}
 ]
 
 const AdminLinkItems : Array<LinkItemProps> = [
 
- {name: "Dashboard", icon: FiUsers, To:""},
- {name: "Announce Events", icon: FiUsers, To:"create-event"},
- {name: "Members", icon: FiUsers, To:"members"},
+ 
+ {name: "Announce Events", icon: FiUsers, To:"/create-event"},
+ {name: "Members", icon: FiUsers, To:"/members"},
 
 ]
 
-const SidebarContent = ({admin, onClose, ...rest }: SidebarProps) => {
+const SidebarContent = ({auth, admin, onClose, ...rest }: SidebarProps) => {
 
   return (
     <Box
@@ -104,6 +110,21 @@ const SidebarContent = ({admin, onClose, ...rest }: SidebarProps) => {
         </Text>
         <CloseButton display={{ base: 'flex', md: 'none' }} onClick={onClose} />
       </Flex>
+      { auth && AuthItems.map((link) => (
+        <NavItem color={"white"} key={link.name} icon={link.icon}>
+          <Link color={"white"} to={link.To} >
+          {link.name}
+         </Link>
+        </NavItem>
+      ))}
+      {LinkItems.map((link) => (
+        <NavItem color={"white"} key={link.name} icon={link.icon}>
+          <Link color={"white"} to={link.To} >
+          {link.name}
+         </Link>
+        </NavItem>
+      ))}
+
       {admin  && AdminLinkItems.map(
         (link)=>(
           <NavItem color={"white"} key={link.name} icon={link.icon}>
@@ -114,13 +135,7 @@ const SidebarContent = ({admin, onClose, ...rest }: SidebarProps) => {
         )
       )
       }
-      {LinkItems.map((link) => (
-        <NavItem color={"white"} key={link.name} icon={link.icon}>
-          <Link color={"white"} to={link.To} >
-          {link.name}
-         </Link>
-        </NavItem>
-      ))}
+     
     </Box>
   )
 }
@@ -162,6 +177,7 @@ const NavItem = ({ icon, children, ...rest }: NavItemProps) => {
 
 const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
   const { userData } = useContext(UserContext);
+  console.log(userData)
   return (
     <Flex
       ml={{ base: 0, md: 60 }}
@@ -199,7 +215,7 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
                 <Avatar
                   size={'sm'}
                   src={
-                    ""
+                    userData?`127.0.0.1:8000${userData.member_data.profile_picture}`:""
                   }
                 />
                 <VStack
@@ -208,9 +224,11 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
                   spacing="1px"
                   ml="2">
                   <Text color={"white"}
-                fontSize="sm">{userData.member_data.full_name}</Text>
+                fontSize="sm">{userData && userData.member_data.full_name}</Text>
                   
-                    {userData.member_data.is_admin ? <Text fontSize="xs" color="white">Admin</Text>:<Text fontSize="xs" color="white">Member</Text>  }
+                    {userData && userData.member_data.is_admin && <Text fontSize="xs" color="white">Admin</Text> }
+                    {userData && !userData.member_data.is_admin && <Text fontSize="xs" color="white">Member</Text> }
+                    {!userData && <Text fontSize="xs" color="white">Guest</Text>  }
                   
                 </VStack>
                 <Box display={{ base: 'none', md: 'flex' }}>
@@ -223,7 +241,8 @@ const MobileNav = ({ onOpen, ...rest }: MobileProps) => {
               borderColor={useColorModeValue('gray.200', 'gray.700')}>
               <MenuItem><Link to="profile">profile</Link></MenuItem>
               <MenuDivider />
-              <MenuItem>Sign out</MenuItem>
+              {userData ? <MenuItem><Link to="/sign-out">Sign out</Link></MenuItem> : <MenuItem><Link to="/login">Login</Link></MenuItem> }
+              <MenuDivider />
             </MenuList>
           </Menu>
         </Flex>
@@ -245,7 +264,7 @@ const SidebarWithHeader = () => {
     const checkAuthentication = async () => {
       try {
         const accessToken = localStorage.getItem('accessToken');
-        console.log(accessToken)
+        //console.log(accessToken)
         if (accessToken) {
           const response = await axios.get('http://127.0.0.1:8000/members/get_details/', {
             headers: {
@@ -266,22 +285,18 @@ const SidebarWithHeader = () => {
         console.log(error)
         setIsAuthenticated(false);
       } finally {
-        setLoading(false);
-       
+        setLoading(false);   
       }
     };
 
     checkAuthentication();
   }, []);
-  const handleLoginNavigation = () => {
-    navigate("/login");
-  };
 
   return (
     <Box minH="100vh" bg={useColorModeValue('gray.100', 'gray.900')}>
 
-    {isAuthenticated && <SidebarContent  onClose={() => onClose} display={{ base: 'none', md: 'block' }} admin={isAdmin}/>}
-     {isAuthenticated && <Drawer
+     <SidebarContent  onClose={() => onClose} display={{ base: 'none', md: 'block' }} admin={isAdmin} auth={isAuthenticated}/>
+   <Drawer
         isOpen={isOpen}
         placement="left"
         onClose={onClose}
@@ -291,33 +306,28 @@ const SidebarWithHeader = () => {
         <DrawerContent>
           <SidebarContent admin={isAdmin} onClose={onClose} />
         </DrawerContent>
-      </Drawer>}
+      </Drawer>
       {/* mobilenav */}
-      {isAuthenticated && <MobileNav background={"#060c14"} onOpen={onOpen} />}
-      <Box ml={{ base: 0, md: 60 }}  p="4">
-
-          <Routes>
-            {
-            isAdmin ? <><Route path="/create-event" element={<CreateEventPage />}  />
-            <Route path="/" element={<HomePage />} />
-            </>:null
-            }
-  
-            {isAuthenticated ?<>
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/Community" element={<Community />} />
-            <Route path="/events" element={<Event />} />
-            <Route path="/my-teams" element={<Team />} />
-            <Route path="/announcemets" element={<AnnouncementPage />} />
-            
-            <Route path="/members" element={<UsersList/>}  /></>
-            :
-           <> <Route path="/register" element={<SignUP />} />
-            <Route path="/login" element={<LoginPage />} />
-  </>}
-          </Routes>
-          {!isAuthenticated && handleLoginNavigation()}
-      </Box>
+     <MobileNav background={"#060c14"} onOpen={onOpen} />
+      <Box ml={{ base: 0, md: 60 }} background={"white"} p="4">
+    <Routes>
+      {isAdmin && <Route path="/create-event" element={<CreateEventPage />} />}
+      {isAdmin  && <Route path="/members"  element={<UsersList />} />}
+      
+      <Route path="/profile" element={<Profile />} />
+      <Route path="/Community" element={<Community />} />
+      <Route path="/events" element={<Event />} />
+      <Route path="/my-teams" element={<Team />} />
+      <Route path="/announcemets" element={<AnnouncementPage />} />
+      <Route path="/members" element={<UsersList />} />
+      <Route path="/register" element={<SignUP />} />
+      <Route path="/login" element={<LoginPage />} />
+      <Route path="/divisions" element={<DivisionPage />} />
+      <Route path="/sign-out" element={<SignOut />} />
+      {isAuthenticated && <Route path="/" element={<BasicStatistics />} /> }
+      
+    </Routes>
+</Box>
     </Box>
   )
 }

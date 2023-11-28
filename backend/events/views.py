@@ -11,7 +11,7 @@ from accounts.models import Member
 from django.core.mail import send_mail
 
 class EventViewset(viewsets.ModelViewSet):
-    queryset = Event.objects.all()
+    queryset = Event.objects.all().order_by("-created_at")
     authentication_classes = [JWTAuthentication]
     serializer_class = EventSerializer
 

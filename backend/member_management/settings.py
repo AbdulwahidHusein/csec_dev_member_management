@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     "division",
 ]
 
+
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
@@ -84,17 +85,23 @@ WSGI_APPLICATION = 'member_management.wsgi.application'
 DB_PASSWORD = os.getenv("DB_PASSWORD")
 DB_USER = os.getenv("DB_USER")
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'railway',
+#         'USER': DB_USER,
+#         'PASSWORD': DB_PASSWORD,
+#         'HOST': 'viaduct.proxy.rlwy.net',
+#         'PORT': '28125',
+#     }
+# }
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'railway',
-        'USER': DB_USER,
-        'PASSWORD': DB_PASSWORD,
-        'HOST': 'viaduct.proxy.rlwy.net',
-        'PORT': '28125',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
-
 
 # 
 
@@ -146,6 +153,8 @@ STATIC_URL = 'static/'
 MEDIA_URL = "media/"
 MEDIA_ROOT = "media/"
 AUTH_USER_MODEL = "accounts.CustomUser"
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 

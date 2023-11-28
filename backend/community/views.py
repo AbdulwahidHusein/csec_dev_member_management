@@ -2,7 +2,7 @@ from rest_framework import permissions
 from rest_framework.decorators import action
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework import viewsets
-from accounts.serializers import PostSerializer, CommentSerializer
+from .serializers import PostSerializer, CommentSerializer
 from rest_framework.response import Response
 from .models import Post, Comment
 

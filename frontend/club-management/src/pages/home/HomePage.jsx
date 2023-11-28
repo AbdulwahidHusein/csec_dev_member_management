@@ -9,7 +9,7 @@ import {
   useColorModeValue,
 } from '@chakra-ui/react';
 
-function SocialProfileWithImage(props) {
+function DivisionData(props) {
   return (
     <Center py={6}>
       <Box
@@ -98,7 +98,7 @@ function HomePage() {
       mt={2}>
       {divdata.map((div, index) => (
         <Box key={index} p={4} flex={['100%', '50%']}>
-          <SocialProfileWithImage divdata={div} />
+          <DivisionData divdata={div} />
         </Box>
       ))}
     </Box>

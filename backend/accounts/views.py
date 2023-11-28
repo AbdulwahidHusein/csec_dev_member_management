@@ -95,7 +95,8 @@ class MemberViewSet(viewsets.ModelViewSet):
         print(request.data)
         serializer = MemberRegistrationSerializer(data=request.data)
         serializer.is_valid()
-        user_data = serializer.validated_data.pop('user')
+        
+        user_data = serializer.validated_data['user']
         user = CustomUser.objects.create_user(**user_data)
         serializer.validated_data["user"] = user
         member = Member(**serializer.validated_data)
@@ -127,8 +128,14 @@ class MemberViewSet(viewsets.ModelViewSet):
     @transaction.atomic
     @action(detail=False, methods=['post', "put", "patch"])
     def aprrove_member(self, request):
-        serializer = MemberSerializer()
-        pass
+        data = request.data
+        member_ids = data["memberIds"]
+        approved_members = []
+        for id in member_ids:
+            member = Member.objects.get(id=id)
+            member.approved = False
+            member.save()
+        return Response("success members disapproved")
     
 class TeamViewSet(viewsets.ModelViewSet):
     authentication_classes = [JWTAuthentication]

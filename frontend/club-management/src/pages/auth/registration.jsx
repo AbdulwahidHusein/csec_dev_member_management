@@ -18,10 +18,12 @@ import {
   import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
   import { UserContext } from '../../UserContext';
 import axios from 'axios';
-import { Form } from 'react-router-dom';
+import { Form, Navigate } from 'react-router-dom';
+
   export default function SignUp() {
     const [showPassword, setShowPassword] = useState(false);
     const { setUserData } = useContext(UserContext);
+    const [sucess, setSucess] = useState(false);
     const [formData, setFormData] = useState({
       full_name: '',
       phone_number: '',
@@ -73,6 +75,7 @@ import { Form } from 'react-router-dom';
         const { refresh } = response.data;
       localStorage.setItem('accessToken', access);
       localStorage.setItem('refreshToken', refresh);
+      setSucess(true)
       } catch (error) {
         // Handle the error
         console.error('Registration failed:', error);
@@ -193,11 +196,12 @@ import { Form } from 'react-router-dom';
             </form>
             <Stack pt={6}>
               <Text align={'center'}>
-                Already a user? <Link to="/login" color={'blue.400'}>Login</Link>
+                Already a user? <a href="/login" color={'blue.400'}>Login</a>
               </Text>
             </Stack>
           </Box>
         </Stack>
+        {sucess && <Navigate to="/" />}
       </Flex>
     );
   }

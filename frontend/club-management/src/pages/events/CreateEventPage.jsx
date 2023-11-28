@@ -74,7 +74,12 @@ function EventCreationForm() {
     };
 
     try {
-      const response = await axios.post('http://127.0.0.1:8000/events/', formData);
+      const accessToken = localStorage.getItem('accessToken');
+      const response = await axios.post('http://127.0.0.1:8000/events/', formData, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
       console.log(formData);
       setSuccess(true);
     } catch (error) {
@@ -89,7 +94,7 @@ function EventCreationForm() {
 
   return (
     <Flex
-      bg={useColorModeValue('white', 'gray.900')}
+      bg="white"
       align="center"
       justify="center"
       css={{
@@ -102,12 +107,14 @@ function EventCreationForm() {
         borderRadius="lg"
         m={{ base: 5, md: 16, lg: 10 }}
         p={{ base: 5, lg: 16 }}
-        boxShadow="xl"
-        bg={useColorModeValue('gray.100', 'gray.800')}
-        width={{ base: 'full', md: 'auto' }}
+        boxShadow="2xl"
+        bg="white"
+        width={{ base: 'full', md: 'full' }}
 
+        rounded={'md'}
       >
-        <Box>
+        <Box backgroundSize="20px 20px"
+              height="100%">
           <VStack spacing={{ base: 4, md: 8, lg: 20 }}>
             <Heading
               fontSize={{

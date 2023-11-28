@@ -13,12 +13,14 @@ import {
 } from '@chakra-ui/react';
 import { Link, Navigate } from 'react-router-dom';
 
+
 import axios from 'axios';
 import { UserContext } from '../../UserContext';
 
 export default function LoginPage() {
   const [error, setError] = useState('');
   const { setUserData } = useContext(UserContext);
+  const [success, setSucess] = useState(false);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -33,16 +35,17 @@ export default function LoginPage() {
 
       console.log('Login successful');
       setUserData(response.data);
-      console.log(response.data.access);
-      Navigate("/")
+      //console.log(response.data.access);
       const { access, refresh } = response.data;
       localStorage.setItem('accessToken', access);
       localStorage.setItem('refreshToken', refresh);
+      setSucess(true);
       
     } catch (error) {
       setError('Invalid credentials');
       console.error('Login failed:', error);
     }
+  
   };
 
   return (
@@ -92,6 +95,7 @@ export default function LoginPage() {
           }
         />
       </Flex>
+      {success && <Navigate to="/" />}
     </Stack>
   );
 }

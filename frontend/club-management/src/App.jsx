@@ -8,9 +8,10 @@ import SidebarWithHeader from "./components/Sidebar";
 import { UserContext } from './UserContext';
 import { ChakraProvider } from "@chakra-ui/react"
 import LoginPage from './pages/auth/login';
+import SignUp from './pages/auth/registration';
 
 function App() {
-const [isAuthenticated, setIsAuthnticated] = useState(false);
+const [isAuthenticated, setIsAuthnticated] = useState(true);
 const {userData} = useContext(UserContext);
 useEffect(
   ()=>{
@@ -21,7 +22,7 @@ useEffect(
   return (
     <Router>
        <ChakraProvider>
-   <SidebarWithHeader />       
+        <SidebarWithHeader />
       </ChakraProvider>
     </Router>
   )
