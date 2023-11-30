@@ -6,7 +6,7 @@ from rest_framework import viewsets
 from .models import Division, MemberShipRequest
 from accounts.serializers import MemberSerializer
 from rest_framework.response import Response
-
+from accounts.models import Member
 class DivisionViewset(viewsets.ModelViewSet):
     queryset = Division.objects.all()
     serializer_class = DivisionSerializer
@@ -14,7 +14,7 @@ class DivisionViewset(viewsets.ModelViewSet):
     def get_permissions(self):
         if self.request.method == "GET":
             return []
-        return [permissions.IsAdminUser()]
+        return []
     
     @action(detail=False, methods=["get"])
     def get_all_members(self, request):
@@ -24,6 +24,18 @@ class DivisionViewset(viewsets.ModelViewSet):
         
         serializer = MemberSerializer(instance=members, many=True)
         return Response(serializer.data)
+    @action(detail=False, methods=["post"])
+    def approve_member(self, request):
+        id = request.data["id"]
+        divid = request.data["divid"]
+        member = Member.objects.get(id=id)
+        division = Division.objects.get(id=divid)
+        
+        member.divisions.add(division)
+        member.save()
+        return Response("User Added")
+        
+        pass
     
 class MemberShipREqViewset(viewsets.ModelViewSet):
     queryset = Division.objects.all()

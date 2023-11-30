@@ -29,7 +29,7 @@ class Member(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='member')
     full_name = models.CharField(max_length=100)
     phone_number = models.CharField(max_length=25)
-    profile_picture = models.ImageField(upload_to="accounts/images/profiles", null=True, blank=True)
+    profile_picture = models.ImageField(upload_to="images/profiles", null=True, blank=True)
     departement = models.CharField(max_length=50)
     study_year = models.IntegerField(null=True, blank=True)
     github_link = models.CharField(max_length=100, null=True, blank=True)

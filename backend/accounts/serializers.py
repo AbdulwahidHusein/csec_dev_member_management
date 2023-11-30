@@ -1,7 +1,7 @@
 from .models import Member
 from .models import CustomUser, Team, Membership
 from rest_framework import serializers
-
+from division.serializers import DivisionSerializer
 
 class CustomUserSerializer(serializers.ModelSerializer):
     email = serializers.EmailField()
@@ -11,24 +11,30 @@ class CustomUserSerializer(serializers.ModelSerializer):
         fields = [
             "email", "password",
         ]
-        
+
+       
 class MemberSerializer(serializers.ModelSerializer):
+    divisions = DivisionSerializer(many=True, read_only=True, required=False)
     approved = serializers.BooleanField(read_only=True)
+    profile_picture = serializers.ImageField()
     class Meta:
         model = Member
         fields = [
             "id",
-            "full_name", "phone_number","profile_picture",
+            "full_name", "phone_number","profile_picture","divisions",
             "departement", "study_year", "github_link",
             "portfolio_link", "linkedin_link", "bio", "approved"
         ]
 
 class MemberRegistrationSerializer(serializers.ModelSerializer):
-    user = CustomUserSerializer()
+    email = serializers.EmailField(read_only=True)
+    password = serializers.CharField(read_only=True)
+    #profile_picture = serializers.ImageField()
     class Meta:
         model = Member
         fields = [
-            "user", "full_name", "phone_number","profile_picture",
+            "email", "password",
+            "full_name", "phone_number","profile_picture",
             "departement", "study_year", "github_link",
             "portfolio_link", "linkedin_link", "bio"
         ]

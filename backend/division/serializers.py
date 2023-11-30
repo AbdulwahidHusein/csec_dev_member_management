@@ -5,7 +5,7 @@ class DivisionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Division
         fields = [
-            'name', 'description', 'logo'
+            'name', 'description', 'logo', "id",
         ]
         
 class MemberShipRequestSerializer(serializers.ModelSerializer):
